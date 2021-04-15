@@ -56,10 +56,6 @@ def register_orders(current_supply, check_points, registered_orders, day_to_regi
 
 
 
-
-
-
-usage_list = [1, 3, 3, 5, 2, 3, 3, 2, 2, 3]
 order_list = []  # list of days which orders will receive
 
 order_check_points = [r]
