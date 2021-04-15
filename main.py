@@ -1,16 +1,5 @@
 import random
-
-""" the first i have to initialize R & Q & days of simulation"""
-r, q = int(input("Input R: ")), int(input("Input Q: "))
-
-
-simulation_duration = 10  # number 10 provides simulation for 10 days
-
-""" amount of product in inventory at start """
-initial_balance = 10
-
-""" initializing order cost and storage cost"""
-order_cost, storage_cost = 200, 10
+from parameters import r, q, simulation_duration, initial_balance, order_cost, storage_cost
 
 
 def distribution_of_daily_usage():
@@ -64,6 +53,10 @@ def register_orders(current_supply, check_points, registered_orders, day_to_regi
             all_orders_cost.append(200)
 
         check_points.pop(check_points.index(current_supply))
+
+
+
+
 
 
 usage_list = [1, 3, 3, 5, 2, 3, 3, 2, 2, 3]
