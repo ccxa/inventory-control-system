@@ -1,42 +1,12 @@
 import random
 from parameters import r, q, simulation_duration, initial_balance, order_cost, storage_cost
-
-
-def distribution_of_daily_usage():
-    random_number = random.randint(0, 100)
-
-    if random_number < 1:
-        random_number = (random.randint(1, 9)) / 10
-
-    if 0.1 <= random_number <= 0.5:
-        return 0
-    elif 0.6 <= random_number <= 15:
-        return 1
-    elif 16 <= random_number <= 35:
-        return 2
-    elif 36 <= random_number <= 75:
-        return 3
-    elif 76 <= random_number <= 90:
-        return 4
-    elif 91 <= random_number <= 100:
-        return 5
-
-
-def distribution_of_lt():
-    random_number = random.randint(1, 10)
-    if 1 <= random_number <= 2:
-        return 1
-    elif 3 <= random_number <= 7:
-        return 2
-    elif 8 <= random_number <= 10:
-        return 3
-
+import parameters
 
 def register_orders(current_supply, check_points, registered_orders, day_to_register):
     if current_supply in check_points:
         orders_should_have = (check_points.index(current_supply)) + 1
         if orders_should_have > len(registered_orders):
-            day2receive = distribution_of_lt() + day + 1
+            day2receive = parameters.distribution_of_lt() + day + 1
             order_list.append(day2receive)
             all_orders_cost.append(200)
 
@@ -47,7 +17,7 @@ def register_orders(current_supply, check_points, registered_orders, day_to_regi
         orders_should_have = check_points.index(current_supply)
 
         if orders_should_have > 0 and (orders_should_have > len(registered_orders)):
-            dol = distribution_of_lt()
+            dol = parameters.distribution_of_lt()
             day2receive = dol + day + 1
             order_list.append(day2receive)
             all_orders_cost.append(200)
@@ -71,7 +41,7 @@ all_orders_cost = []
 print("{:<8} {:<8} {:<15} {:<10}".format("day", "usage", "start_point", "end_point"))
 for day in range(1, simulation_duration + 1):
     print("-" * 43)
-    today_usage = distribution_of_daily_usage()
+    today_usage = parameters.distribution_of_daily_usage()
 
     if day == 1:
         start_point_supply = initial_balance
