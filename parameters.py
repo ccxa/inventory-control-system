@@ -15,9 +15,18 @@ order_cost, storage_cost = 200, 10
 
 
 def distribution_of_daily_usage():
-    
+    """
+    This function generates a random number as product usage
+    in a single day, i.e. it may produce number 5 with probability
+    of 10% also it shows 5 products used at inventory!
+    :return:
+    Integer number in range 0 - 5 that shows usage of
+    product at inventory in that day.
+    """
     random_number = random.randint(0, 100)
 
+    # If generated number become 0, then we generate a new one
+    # between 0.1 - 0.9 to guess number of used products.
     if random_number < 1:
         random_number = (random.randint(1, 9)) / 10
 
