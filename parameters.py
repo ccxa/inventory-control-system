@@ -1,22 +1,21 @@
 import random
 
-""" the first i have to initialize R & Q & days of simulation"""
-# R -> reorder point
-# Q -> order quantity
+# Getting reorder point and order quantity from user
+reorder_point = int(input("Input reorder_point: "))
+quantity = int(input("Input quantity: "))
 
-r, q = int(input("Input R: ")), int(input("Input Q: "))
+# Days to simulate
+simulation_duration = 10
 
-
-simulation_duration = 10  # number 10 provides simulation for 10 days
-
-""" amount of product in inventory at start """
+# The amount of product in stock at start
 initial_balance = 10
 
-""" initializing order cost and storage cost"""
+# Init order cost and storage cost : Optional
 order_cost, storage_cost = 200, 10
 
 
 def distribution_of_daily_usage():
+    
     random_number = random.randint(0, 100)
 
     if random_number < 1:

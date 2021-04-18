@@ -1,6 +1,7 @@
 import random
-from parameters import r, q, simulation_duration, initial_balance, order_cost, storage_cost
+from parameters import reorder_point, quantity, simulation_duration, initial_balance, order_cost, storage_cost
 import parameters
+
 
 def register_orders(current_supply, check_points, registered_orders, day_to_register):
     if current_supply in check_points:
@@ -28,10 +29,10 @@ def register_orders(current_supply, check_points, registered_orders, day_to_regi
 
 order_list = []  # list of days which orders will receive
 
-order_check_points = [r]
+order_check_points = [reorder_point]
 for i in range(0, 8):
-    r = r - q
-    order_check_points.append(r)
+    reorder_point = reorder_point - quantity
+    order_check_points.append(reorder_point)
 
 average_storing_cost = []
 deficit_list = []
@@ -50,7 +51,7 @@ for day in range(1, simulation_duration + 1):
     else:
         start_point_supply = end_point_supply
         if day in order_list:
-            start_point_supply += q
+            start_point_supply += quantity
             order_list.pop(order_list.index(day))
 
         end_point_supply = start_point_supply - today_usage
