@@ -13,6 +13,9 @@ initial_balance = 10
 # Init order cost and storage cost : Optional
 order_cost, storage_cost = 200, 10
 
+# Order cost
+order_cost = 200
+
 
 def distribution_of_daily_usage():
     """

@@ -1,15 +1,15 @@
-import random
-from parameters import reorder_point, quantity, simulation_duration, initial_balance, order_cost, storage_cost
+from parameters import reorder_point, quantity, \
+    simulation_duration, initial_balance
 import parameters
 
 
-def register_orders(current_supply, check_points, registered_orders, day_to_register):
+def register_orders(current_supply, check_points, registered_orders):
     if current_supply in check_points:
         orders_should_have = (check_points.index(current_supply)) + 1
         if orders_should_have > len(registered_orders):
             day2receive = parameters.distribution_of_lt() + day + 1
             order_list.append(day2receive)
-            all_orders_cost.append(200)
+            all_orders_cost.append(parameters.order_cost)
 
     else:
         check_points.append(current_supply)
@@ -21,13 +21,13 @@ def register_orders(current_supply, check_points, registered_orders, day_to_regi
             dol = parameters.distribution_of_lt()
             day2receive = dol + day + 1
             order_list.append(day2receive)
-            all_orders_cost.append(200)
+            all_orders_cost.append(parameters.order_cost)
 
         check_points.pop(check_points.index(current_supply))
 
 
-
-order_list = []  # list of days which orders will receive
+# Dates that orders will receive
+order_list = []
 
 order_check_points = [reorder_point]
 for i in range(0, 8):
@@ -47,7 +47,7 @@ for day in range(1, simulation_duration + 1):
     if day == 1:
         start_point_supply = initial_balance
         end_point_supply = start_point_supply - today_usage
-        register_orders(end_point_supply, order_check_points, order_list, day)
+        register_orders(end_point_supply, order_check_points, order_list)
     else:
         start_point_supply = end_point_supply
         if day in order_list:
@@ -55,7 +55,7 @@ for day in range(1, simulation_duration + 1):
             order_list.pop(order_list.index(day))
 
         end_point_supply = start_point_supply - today_usage
-        register_orders(end_point_supply, order_check_points, order_list, day)
+        register_orders(end_point_supply, order_check_points, order_list)
 
     if start_point_supply <= 0:
         deficit_list.append(today_usage)
