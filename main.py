@@ -4,12 +4,22 @@ import parameters
 
 
 def register_orders(current_supply, check_points, registered_orders):
-    print((check_points))
+    """
+    by comparing current amount of products at inventory with
+    order check points we can decide to register new order or not.
+
+    :param current_supply: products left at inventory.
+    :param check_points: an algorithmic generated list that helps
+        us to decide register new order or not.
+    :param registered_orders: a list contains registered orders.
+    :return: None, just appends orders to list.
+    """
+
     if current_supply in check_points:
         orders_should_have = (check_points.index(current_supply)) + 1
         if orders_should_have > len(registered_orders):
-            day2receive = parameters.distribution_of_lt() + day + 1
-            order_list.append(day2receive)
+            receiving_date = parameters.distribution_of_lt() + day + 1
+            order_list.append(receiving_date)
             all_orders_cost.append(parameters.order_cost)
 
     else:
@@ -32,26 +42,37 @@ def register_orders(current_supply, check_points, registered_orders):
 # Dates that orders will receive
 order_list = []
 
+# Generating orders check points
 order_check_points = [reorder_point]
 for i in range(0, 8):
     reorder_point = reorder_point - quantity
     order_check_points.append(reorder_point)
 
+# Creating lists we need
 average_storing_cost = []
 deficit_list = []
 all_deficit_cost = []
 all_orders_cost = []
 
-print("{:<8} {:<8} {:<15} {:<10}".format("day", "usage", "start_point", "end_point"))
+# Printing columns titles
+print("{:<8} {:<8} {:<15} {:<10}".format(
+    "day", "usage", "start_point", "end_point")
+     )
+
 for day in range(1, simulation_duration + 1):
+    # To divide each row
     print("-" * 43)
+
+    # estimate today's usage
     today_usage = parameters.distribution_of_daily_usage()
 
     if day == 1:
+        # Use (hardcoded/user inputs) for first day of simulation
         start_point_supply = initial_balance
         end_point_supply = start_point_supply - today_usage
         register_orders(end_point_supply, order_check_points, order_list)
     else:
+
         start_point_supply = end_point_supply
         if day in order_list:
             start_point_supply += quantity
@@ -86,7 +107,9 @@ for day in range(1, simulation_duration + 1):
         avg = (start_point_supply + end_point_supply) / 2
         average_storing_cost.append(avg)
 
-    print("{:<8} {:<12} {:<15} {:<10}".format(day, today_usage, start_point_supply, end_point_supply))
+    print("{:<8} {:<12} {:<15} {:<10}".format(
+        day, today_usage, start_point_supply, end_point_supply)
+    )
 
 _index_item = []
 _index_none = []
