@@ -4,6 +4,7 @@ import parameters
 
 
 def register_orders(current_supply, check_points, registered_orders):
+    print((check_points))
     if current_supply in check_points:
         orders_should_have = (check_points.index(current_supply)) + 1
         if orders_should_have > len(registered_orders):
@@ -17,9 +18,11 @@ def register_orders(current_supply, check_points, registered_orders):
         check_points.reverse()
         orders_should_have = check_points.index(current_supply)
 
-        if orders_should_have > 0 and (orders_should_have > len(registered_orders)):
-            dol = parameters.distribution_of_lt()
-            day2receive = dol + day + 1
+        if orders_should_have > 0 \
+                and (orders_should_have > len(registered_orders)):
+            lead_time = parameters.distribution_of_lt()
+
+            day2receive = lead_time + day + 1
             order_list.append(day2receive)
             all_orders_cost.append(parameters.order_cost)
 
@@ -59,21 +62,26 @@ for day in range(1, simulation_duration + 1):
 
     if start_point_supply <= 0:
         deficit_list.append(today_usage)
+
     elif today_usage > start_point_supply:
         deficit = today_usage - start_point_supply
         deficit_list.append(deficit)
+
     else:
         deficit_list.append("None")
 
-    if start_point_supply <= 0 and end_point_supply > 0:
+    if start_point_supply <= 0 < end_point_supply:
         avg = (0 + end_point_supply) / 2
         average_storing_cost.append(avg)
-    elif start_point_supply > 0 and end_point_supply <= 0:
+
+    elif start_point_supply > 0 >= end_point_supply:
         avg = (start_point_supply + 0) / 2
         average_storing_cost.append(avg)
+
     elif start_point_supply <= 0 and end_point_supply <= 0:
         avg = (0 + 0) / 2
         average_storing_cost.append(avg)
+
     else:
         avg = (start_point_supply + end_point_supply) / 2
         average_storing_cost.append(avg)
