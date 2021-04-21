@@ -1,5 +1,3 @@
-from parameters import reorder_point, quantity, \
-    simulation_duration, initial_balance
 import parameters
 
 
@@ -43,10 +41,10 @@ def register_orders(current_supply, check_points, registered_orders):
 order_list = []
 
 # Generating orders check points
-order_check_points = [reorder_point]
+order_check_points = [parameters.reorder_point]
 for i in range(0, 8):
-    reorder_point = reorder_point - quantity
-    order_check_points.append(reorder_point)
+    parameters.reorder_point = parameters.reorder_point - parameters.quantity
+    order_check_points.append(parameters.reorder_point)
 
 # Creating lists we need
 average_storing_cost = []
@@ -54,12 +52,15 @@ deficit_list = []
 all_deficit_cost = []
 all_orders_cost = []
 
+# Be kind with interpreter :D
+end_point_supply = None
+
 # Printing columns titles
 print("{:<8} {:<8} {:<15} {:<10}".format(
     "day", "usage", "start_point", "end_point")
      )
 
-for day in range(1, simulation_duration + 1):
+for day in range(1, parameters.simulation_duration + 1):
     # To divide each row
     print("-" * 43)
 
@@ -68,14 +69,14 @@ for day in range(1, simulation_duration + 1):
 
     if day == 1:
         # Use (hardcoded/user inputs) for first day of simulation
-        start_point_supply = initial_balance
+        start_point_supply = parameters.initial_balance
         end_point_supply = start_point_supply - today_usage
         register_orders(end_point_supply, order_check_points, order_list)
     else:
 
         start_point_supply = end_point_supply
         if day in order_list:
-            start_point_supply += quantity
+            start_point_supply += parameters.quantity
             order_list.pop(order_list.index(day))
 
         end_point_supply = start_point_supply - today_usage
@@ -111,6 +112,7 @@ for day in range(1, simulation_duration + 1):
         day, today_usage, start_point_supply, end_point_supply)
     )
 
+
 _index_item = []
 _index_none = []
 _index_counter = 0
@@ -130,8 +132,8 @@ for item in _index_item:
         _min = min(_complex)
         cost = (_min - item) * deficit_list[item] * 10
         all_deficit_cost.append(cost)
-    except Exception as e:
-        None
+    except ValueError as e:
+        pass
 
 avg_order_cost = sum(all_orders_cost)
 print("\n\nOrders Cost  - ", avg_order_cost)
