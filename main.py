@@ -1,4 +1,5 @@
 import parameters
+import calculator as cl
 
 
 def register_orders(current_supply, check_points, registered_orders):
@@ -82,31 +83,11 @@ for day in range(1, parameters.simulation_duration + 1):
         end_point_supply = start_point_supply - today_usage
         register_orders(end_point_supply, order_check_points, order_list)
 
-    if start_point_supply <= 0:
-        deficit_list.append(today_usage)
+    deficit = cl.get_deficit(start_point_supply, today_usage)
+    deficit_list.append(deficit)
 
-    elif today_usage > start_point_supply:
-        deficit = today_usage - start_point_supply
-        deficit_list.append(deficit)
-
-    else:
-        deficit_list.append("None")
-
-    if start_point_supply <= 0 < end_point_supply:
-        avg = (0 + end_point_supply) / 2
-        average_storing_cost.append(avg)
-
-    elif start_point_supply > 0 >= end_point_supply:
-        avg = (start_point_supply + 0) / 2
-        average_storing_cost.append(avg)
-
-    elif start_point_supply <= 0 and end_point_supply <= 0:
-        avg = (0 + 0) / 2
-        average_storing_cost.append(avg)
-
-    else:
-        avg = (start_point_supply + end_point_supply) / 2
-        average_storing_cost.append(avg)
+    avg = cl.avg_storing_cost(start_point_supply, end_point_supply)
+    average_storing_cost.append(avg)
 
     print("{:<8} {:<12} {:<15} {:<10}".format(
         day, today_usage, start_point_supply, end_point_supply)
