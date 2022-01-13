@@ -96,13 +96,11 @@ for day in range(1, parameters.simulation_duration + 1):
 
 _index_item = []
 _index_none = []
-_index_counter = 0
-for i in deficit_list:
+for _index, i in enumerate(deficit_list):
     if i != 'None':
-        _index_item.append(_index_counter)
+        _index_item.append(_index)
     elif i == 'None':
-        _index_none.append(_index_counter)
-    _index_counter += 1
+        _index_none.append(_index)
 
 for item in _index_item:
     _complex = []
@@ -123,8 +121,5 @@ print("Storing Cost - ", avg_storing_cost)
 avg_deficit_cost = sum(all_deficit_cost)
 print("Deficit Cost - ", avg_deficit_cost)
 
-_tmp = []
-for i in deficit_list:
-    if i != 'None':
-        _tmp.append(i)
+_tmp = [i for i in deficit_list if i != 'None']
 print("Lost profit (if expected = )", sum(_tmp) * 20)
