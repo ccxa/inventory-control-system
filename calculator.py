@@ -1,7 +1,7 @@
-import parameters
+import parameters as params
 
 
-def avg_storing_cost(start_point_supply, end_point_supply):
+def get_storing_cost(start_point_supply, end_point_supply):
     if start_point_supply <= 0 < end_point_supply:
         avg = (0 + end_point_supply) / 2
     elif start_point_supply > 0 >= end_point_supply:
@@ -32,15 +32,15 @@ def register_orders(current_supply, check_points, registered_orders, day):
         us to decide register new order or not.
     :param registered_orders: a list contains registered orders.
     :param day: the iterated day by for loop
-    :return: None, just appends orders to list.
+    :return: None, just appends orders to the list.
 
     """
     _pop = False
     if current_supply in check_points:
         orders_should_have = (check_points.index(current_supply)) + 1
         if orders_should_have > len(registered_orders):
-            receiving_date = parameters.distribution_of_lt() + day + 1
-            param = parameters.order_cost
+            receiving_date = params.distribution_of_lt() + day + 1
+            param = params.order_cost
 
             return receiving_date, param, _pop
         receiving_date, param = 'None', 'None'
@@ -55,10 +55,10 @@ def register_orders(current_supply, check_points, registered_orders, day):
 
         if orders_should_have > 0 \
                 and (orders_should_have > len(registered_orders)):
-            lead_time = parameters.distribution_of_lt()
+            lead_time = params.distribution_of_lt()
 
             day2receive = lead_time + day + 1
-            param = parameters.order_cost
+            param = params.order_cost
             return day2receive, param, _pop
         day2receive, param = 'None', 'None'
         return day2receive, param, _pop
@@ -67,13 +67,13 @@ def register_orders(current_supply, check_points, registered_orders, day):
 class Fos:
 
     # Generating orders check points
-    order_check_points = [parameters.reorder_point]
+    order_check_points = [params.reorder_point]
     for i in range(0, 8):
-        parameters.reorder_point = parameters.reorder_point - parameters.quantity
-        order_check_points.append(parameters.reorder_point)
+        params.reorder_point = params.reorder_point - params.quantity
+        order_check_points.append(params.reorder_point)
 
     # Creating lists we need
-    average_storing_cost, deficit_list = [], []
+    storing_costs, deficit_list = [], []
     all_deficit_cost, all_orders_cost = [], []
     # Dates that orders will receive
     order_list = []
@@ -84,18 +84,18 @@ class Fos:
     print("{:<8} {:<8} {:<15} {:<10}".format(
         "day", "usage", "start_point", "end_point")
     )
-    
+
     def the_loop(self):
-        for day in range(1, parameters.simulation_duration + 1):
+        for day in range(1, params.simulation_duration + 1):
             # To divide each row
             print("-" * 43)
 
             # estimate today's usage
-            today_usage = parameters.distribution_of_daily_usage()
+            today_usage = params.distribution_of_daily_usage()
 
             if day == 1:
                 # Use (hardcoded/user inputs) for first day of simulation
-                start_point_supply = parameters.initial_balance
+                start_point_supply = params.initial_balance
                 end_point_supply = start_point_supply - today_usage
 
                 _receiving_date, par, _pop = register_orders(end_point_supply, self.order_check_points, self.order_list, day)
@@ -108,7 +108,7 @@ class Fos:
 
                 start_point_supply = end_point_supply
                 if day in self.order_check_points:
-                    start_point_supply += parameters.quantity
+                    start_point_supply += params.quantity
                     self.order_check_points.pop(self.order_check_points.index(day))
 
                 end_point_supply = start_point_supply - today_usage
@@ -122,11 +122,11 @@ class Fos:
             deficit = get_deficit(start_point_supply, today_usage)
             self.deficit_list.append(deficit)
 
-            avg = avg_storing_cost(start_point_supply, end_point_supply)
-            self.average_storing_cost.append(avg)
+            avg = get_storing_cost(start_point_supply, end_point_supply)
+            self.storing_costs.append(avg)
 
             print("{:<8} {:<12} {:<15} {:<10}".format(
                 day, today_usage, start_point_supply, end_point_supply)
             )
 
-        return self.average_storing_cost, self.deficit_list, self.all_deficit_cost, self.all_orders_cost
+        return self.storing_costs, self.deficit_list, self.all_deficit_cost, self.all_orders_cost

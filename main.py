@@ -1,11 +1,7 @@
 import calculator
 
 register_an_order = calculator.Fos()
-average_storing_cost, deficit_list, all_deficit_cost, all_orders_cost = register_an_order.the_loop()
-
-
-
-
+storing_costs, deficit_list, all_deficit_cost, all_orders_cost = register_an_order.the_loop()
 
 _index_item = []
 _index_none = []
@@ -29,8 +25,8 @@ for item in _index_item:
 
 avg_order_cost = sum(all_orders_cost)
 print("\n\nOrders Cost  - ", avg_order_cost)
-avg_storing_cost = sum(average_storing_cost) * 10
-print("Storing Cost - ", avg_storing_cost)
+average_storing_cost = sum(storing_costs) * 10
+print("Storing Cost - ", average_storing_cost)
 avg_deficit_cost = sum(all_deficit_cost)
 print("Deficit Cost - ", avg_deficit_cost)
 
