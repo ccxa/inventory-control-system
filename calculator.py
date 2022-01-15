@@ -35,53 +35,51 @@ def register_orders(current_supply, check_points, registered_orders, day):
     :return: None, just appends orders to the list.
 
     """
-    _pop = False
+    # a flag for pop operation after calling function
     if current_supply in check_points:
+        _pop = False
         orders_should_have = (check_points.index(current_supply)) + 1
         if orders_should_have > len(registered_orders):
             receiving_date = params.distribution_of_lt() + day + 1
-            param = params.order_cost
+            order_cost = params.order_cost
 
-            return receiving_date, param, _pop
-        receiving_date, param = 'None', 'None'
-        return receiving_date, param, _pop
+            return receiving_date, order_cost, _pop
+        receiving_date, order_cost = 'None', 'None'
+        return receiving_date, order_cost, _pop
     else:
-
         _pop = True
         check_points.append(current_supply)
-        check_points.sort()
-        check_points.reverse()
+        check_points = sorted(check_points, reverse=True)
         orders_should_have = check_points.index(current_supply)
 
         if orders_should_have > 0 \
                 and (orders_should_have > len(registered_orders)):
             lead_time = params.distribution_of_lt()
 
-            day2receive = lead_time + day + 1
-            param = params.order_cost
-            return day2receive, param, _pop
-        day2receive, param = 'None', 'None'
-        return day2receive, param, _pop
+            receiving_date = lead_time + day + 1
+            order_cost = params.order_cost
+            return receiving_date, order_cost, _pop
+        receiving_date, order_cost = 'None', 'None'
+        return receiving_date, order_cost, _pop
 
 
 class Fos:
     # Generating orders check points
     order_cp = [params.reorder_point - params.quantity * i for i in range(9)]
-
     # Creating lists we need
     storing_costs, deficit_list = [], []
     all_deficit_cost, all_orders_cost = [], []
     # Dates that orders will receive
     order_list = []
-    # Be kind with interpreter :D
-    end_point_supply = None
 
     # Printing columns titles
     print("{:<8} {:<8} {:<15} {:<10}".format(
         "day", "usage", "start_point", "end_point")
     )
 
-    def the_loop(self):
+    def calculate(self):
+        # Being kind with IDE :D
+        end_point_supply = None
         for day in range(1, params.simulation_duration + 1):
             # To divide each row
             print("-" * 43)
@@ -94,10 +92,13 @@ class Fos:
                 start_point_supply = params.initial_balance
                 end_point_supply = start_point_supply - today_usage
 
-                _receiving_date, par, _pop = register_orders(end_point_supply, self.order_cp, self.order_list, day)
+                _receiving_date, order_cost, _pop = register_orders(
+                    end_point_supply, self.order_cp, self.order_list, day
+                )
+
                 if _receiving_date != 'None:':
                     self.order_list.append(_receiving_date)
-                    self.all_orders_cost.append(par)
+                    self.all_orders_cost.append(order_cost)
                 if _pop:
                     self.order_cp.pop(self.order_cp.index(end_point_supply))
             else:
@@ -108,10 +109,12 @@ class Fos:
                     self.order_cp.pop(self.order_cp.index(day))
 
                 end_point_supply = start_point_supply - today_usage
-                _receiving_date, par, _pop = register_orders(end_point_supply, self.order_cp, self.order_list, day)
+                _receiving_date, order_cost, _pop = register_orders(
+                    end_point_supply, self.order_cp, self.order_list, day
+                )
                 if _receiving_date != 'None':
                     self.order_list.append(_receiving_date)
-                    self.all_orders_cost.append(par)
+                    self.all_orders_cost.append(order_cost)
                 if _pop:
                     self.order_cp.pop(self.order_cp.index(end_point_supply))
 
