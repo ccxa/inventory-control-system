@@ -65,12 +65,8 @@ def register_orders(current_supply, check_points, registered_orders, day):
 
 
 class Fos:
-
     # Generating orders check points
-    order_check_points = [params.reorder_point]
-    for i in range(0, 8):
-        params.reorder_point = params.reorder_point - params.quantity
-        order_check_points.append(params.reorder_point)
+    order_cp = [params.reorder_point - params.quantity * i for i in range(9)]
 
     # Creating lists we need
     storing_costs, deficit_list = [], []
@@ -98,26 +94,26 @@ class Fos:
                 start_point_supply = params.initial_balance
                 end_point_supply = start_point_supply - today_usage
 
-                _receiving_date, par, _pop = register_orders(end_point_supply, self.order_check_points, self.order_list, day)
+                _receiving_date, par, _pop = register_orders(end_point_supply, self.order_cp, self.order_list, day)
                 if _receiving_date != 'None:':
                     self.order_list.append(_receiving_date)
                     self.all_orders_cost.append(par)
                 if _pop:
-                    self.order_check_points.pop(self.order_check_points.index(end_point_supply))
+                    self.order_cp.pop(self.order_cp.index(end_point_supply))
             else:
 
                 start_point_supply = end_point_supply
-                if day in self.order_check_points:
+                if day in self.order_cp:
                     start_point_supply += params.quantity
-                    self.order_check_points.pop(self.order_check_points.index(day))
+                    self.order_cp.pop(self.order_cp.index(day))
 
                 end_point_supply = start_point_supply - today_usage
-                _receiving_date, par, _pop = register_orders(end_point_supply, self.order_check_points, self.order_list, day)
+                _receiving_date, par, _pop = register_orders(end_point_supply, self.order_cp, self.order_list, day)
                 if _receiving_date != 'None':
                     self.order_list.append(_receiving_date)
                     self.all_orders_cost.append(par)
                 if _pop:
-                    self.order_check_points.pop(self.order_check_points.index(end_point_supply))
+                    self.order_cp.pop(self.order_cp.index(end_point_supply))
 
             deficit = get_deficit(start_point_supply, today_usage)
             self.deficit_list.append(deficit)
